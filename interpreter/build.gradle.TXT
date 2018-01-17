@@ -1,0 +1,14 @@
+group 'interpreter'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'swi-prolog'
+
+sourceCompatibility = 7.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

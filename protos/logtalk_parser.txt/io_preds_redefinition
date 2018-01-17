@@ -1,0 +1,52 @@
+
+  Read  a term from the current  input stream and unify the term  with
+    Term.    The  reading is  controlled  by options  from the  list  of
+    Options.   If this list is  empty, the behaviour is the same  as for
+    read/1.    The options  are upward compatible  with Quintus  Prolog.
+    The  argument  order is  according  to the  ISO  standard.    Syntax
+    errors  are always reported using exception-handling  (see catch/3).
+    Options:
+
+    backquoted_string(Bool)
+         If true, read `...` to  a string object (see section ??).   The
+         default depends on the Prolog flag back_quotes.
+
+    character_escapes(Bool)
+         Defines how to  read \ escape sequences  in quoted atoms.   See
+
+         the  Prolog  flag  character_escapes in  current_prolog_flag/2.
+         (SWI-Prolog).
+
+    comments(-Comments)
+         Unify Comments with a list of Position-Comment,  where Position
+         is  a  stream   position  object  (see  stream_position_data/3)
+         indicating the  start  of a  comment and  Comment  is a  string
+         object containing the  text including delimiters of a  comment.
+         It returns all comments from where the read_term/2 call started
+         up to the end of the term read.
+
+    cycles(Bool)
+         If true (default  false), re-instantiate templates as  produced
+         by  the corresponding  write_term/2  option.    Note  that  the
+         default  is false  to  avoid misinterpretation  of  @(Template,
+         Substutions), while the default of write_term/2 is true because
+         emitting  cyclic terms  without  using the  template  construct
+         produces an infinitely large  term (read:  it will  generate an
+         error after producing a huge amount of output).
+
+    dotlists(Bool)
+         If true (default false), read .(a,[]) as a list,  even if lists
+         are internally nor constructed using the dot as functor.   This
+         is primarily intended to read the output from write_canonical/1
+         from other Prolog systems.  See section ??.
+
+    double_quotes(Atom)
+         Defines  how to  read  "..." strings.     See the  Prolog  flag
+         double_quotes.  (SWI-Prolog).
+
+    module(Module)
+         Specify  Module  for  operators,   character_escapes  flag  and
+         double_quotes flag.  The  value of the latter two is  overruled
+         if the  corresponding read_term/3 option  is provided.   If  no
+         module  is specified,  the  current  `source module'  is  used.
+         (SWI-Prolog).

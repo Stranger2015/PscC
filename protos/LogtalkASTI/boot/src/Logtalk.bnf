@@ -1,0 +1,1071 @@
+
+
+//ebnf_rule(| [ Head, "::=" | Body]) --> Body.
+
+
+//entity definition
+entity ::= object | category | protocol | event
+
+
+//Object definition
+object ::= ":- object(" object_identifier [ "," object_relations ] ")."
+
+
+event ::=
+
+///
+//directive(begin, EntityName ) ::=
+//    Entity = EntityName(| Parameters )
+//	"(" ":-" EntityName ")"
+//	[ "," EntityName* ]
+
+
+//The Logtalk grammar is here described using Backus-Naur Form syntax. Non-terminal symbols in italics have the definition found in the ISO Prolog //Standard. Terminal symbols are //represented in a fixed width font and between double-quotes.
+//Entities
+//directive( end, Entity ) ::=
+//    ":- end_" "object."
+
+object_relations ::=
+    prototype_relations |
+    non_prototype_relations
+
+prototype_relations ::=
+    prototype_relation |
+	prototype_relation "," prototype_relations
+
+prototype_relation ::=
+    implements_protocols |
+    imports_categories |
+    extends_objects
+
+non_prototype_relations ::=
+    non_prototype_relation |
+    non_prototype_relation "," non_prototype_relations
+
+non_prototype_relation ::=
+    implements_protocols |
+    imports_categories |
+    instantiates_classes |
+    specializes_classes
+
+//Category definition
+
+category ::=
+    begin_category_directive [ category_directives ] [ clauses ] end_category_directive.
+
+begin_category_directive ::=
+    ":- category(" category_identifier [ "," category_relations ] ")."
+
+end_category_directive ::=
+    ":- end_category."
+
+category_relations ::=
+    category_relation |
+    category_relation "," category_relation*
+
+category_relation ::=
+    implements_protocols |
+    extends_categories |
+    implements_objects
+    //complements_objects
+
+//Protocol definition
+
+protocol ::=
+    begin_protocol_directive [ protocol_directives ] end_protocol_directive.
+
+begin_protocol_directive ::=
+    ":- protocol(" protocol_identifier [ "," extends_protocols ] ")."
+
+end_protocol_directive ::=
+    ":- end_protocol."
+
+//Entity relations
+extends_protocols ::=
+    "extends(" extended_protocols ")"
+
+extends_objects ::=
+    "extends(" extended_objects ")"
+
+extends_categories ::=
+    "extends(" extended_categories ")"
+
+implements_protocols ::=
+    "implements(" implemented_protocols ")"
+
+imports_categories ::=
+    "imports(" imported_categories ")"
+
+instantiates_classes ::=
+    "instantiates(" instantiated_objects ")"
+
+specializes_classes ::=
+    "specializes(" specialized_objects ")"
+    implemented_protocol | /fixme
+
+complements_objects ::=
+    "complements(" complemented_objects ")"
+
+//Implemented protocols
+implemented_protocols ::=
+    implemented_protocol_sequence |
+    implemented_protocol_list
+
+implemented_protocol ::=
+    protocol_identifier |
+    scope "::" protocol_identifier
+
+implemented_protocol_sequence ::=
+    implemented_protocol |
+    implemented_protocol "," implemented_protocol_sequence
+
+implemented_protocol_list ::=
+    "[" implemented_protocol_sequence "]"
+
+//Extended protocols
+extended_protocols ::=
+    extended_protocol |
+    extended_protocol_sequence |
+    extended_protocol_list
+
+extended_protocol ::=
+    protocol_identifier |
+    scope "::" protocol_identifier
+
+extended_protocol_sequence ::=
+    extended_protocol |
+    extended_protocol "," extended_protocol_sequence
+
+extended_protocol_list ::=
+    "[" extended_protocol_sequence "]"
+
+//Imported categories
+
+imported_categories ::=
+    imported_category |
+    imported_category_sequence |
+    imported_category_list
+
+imported_category ::=
+    category_identifier |
+    scope "::" category_identifier
+
+imported_category_sequence ::=
+    imported_category |
+    imported_category "," imported_category_sequence
+
+imported_category_list ::=
+    "[" imported_category_sequence "]"
+
+//Extended objects
+
+extended_objects ::=
+    extended_object |
+    extended_object_sequence |
+    extended_object_list
+
+extended_object ::=
+    object_identifier |
+    scope "::" object_identifier
+
+extended_object_sequence ::=
+    extended_object |
+    extended_object "," extended_object_sequence
+
+extended_object_list ::=
+    "[" extended_object_sequence "]"
+
+//Extended categories
+
+extended_categories ::=
+    extended_category |
+    extended_category_sequence |
+    extended_category_list
+
+extended_category ::=
+    category_identifier |
+    scope "::" category_identifier
+
+extended_category_sequence ::=
+    extended_category |
+    extended_category "," extended_category_sequence
+
+extended_category_list ::=
+    "[" extended_category_sequence "]"
+
+//Instantiated objects
+
+instantiated_objects ::=
+    instantiated_object |
+    instantiated_object_sequence |
+    instantiated_object_list
+
+instantiated_object ::=
+    object_identifier |
+    scope "::" object_identifier
+
+instantiated_object_sequence ::=
+    instantiated_object
+    instantiated_object "," instantiated_object_sequence |
+
+instantiated_object_list ::=
+    "[" instantiated_object_sequence "]"
+
+//Specialized objects
+
+specialized_objects ::=
+    specialized_object |
+    specialized_object_sequence |
+    specialized_object_list
+
+specialized_object ::=
+    object_identifier |
+    scope "::" object_identifier
+
+specialized_object_sequence ::=
+    specialized_object |
+    specialized_object "," specialized_object_sequence
+
+specialized_object_list ::=
+    "[" specialized_object_sequence "]"
+
+//Complemented objects
+
+complemented_objects ::=
+    object_identifier |
+    complemented_object_sequence |
+    complemented_object_list
+
+complemented_object_sequence ::=
+    object_identifier |
+    object_identifier "," complemented_object_sequence
+
+complemented_object_list ::=
+    "[" complemented_object_sequence "]"
+
+//Entity and predicate scope
+
+scope ::=
+    "public" |
+    "protected" |
+    "private"
+
+//Entity identifiers
+
+entity_identifiers ::=
+    entity_identifier |
+    entity_identifier_sequence |
+    entity_identifier_list
+
+entity_identifier ::=
+    object_identifier |
+    protocol_identifier |
+    category_identifier
+
+entity_identifier_sequence ::=
+    entity_identifier |
+    entity_identifier "," entity_identifier_sequence
+
+entity_identifier_list ::=
+    "[" entity_identifier_sequence "]"
+
+//Object identifiers
+
+object_identifiers ::=
+    object_identifier |
+    object_identifier_sequence |
+    object_identifier_list
+
+object_identifier ::=
+    atom |
+    compound
+
+object_identifier_sequence ::=
+    object_identifier |
+    object_identifier "," object_identifier_sequence
+
+object_identifier_list ::=
+    "[" object_identifier_sequence "]"
+
+//Category identifiers
+
+category_identifiers ::=
+    category_identifier |
+    category_identifier_sequence |
+    category_identifier_list
+
+category_identifier ::=
+    atom |
+    compound
+
+category_identifier_sequence ::=
+    category_identifier |
+    category_identifier "," category_identifier_sequence
+
+category_identifier_list ::=
+    "[" category_identifier_sequence "]"
+
+//Protocol identifiers
+
+protocol_identifiers ::=
+    protocol_identifier |
+    protocol_identifier_sequence |
+    protocol_identifier_list
+
+protocol_identifier ::=
+    atom
+
+protocol_identifier_sequence ::=
+    protocol_identifier |
+    protocol_identifier "," protocol_identifier_sequence
+
+protocol_identifier_list ::=
+    "[" protocol_identifier_sequence "]"
+
+//Module identifiers
+
+module_identifier ::=
+    atom
+
+//Source file names
+
+source_file_names ::=
+    source_file_name |
+    source_file_name_list
+
+source_file_name ::=
+    atom |
+    library_source_file_name
+
+library_source_file_name ::=
+    library_name "(" atom ")"
+
+library_name ::=
+    atom
+
+source_file_name_sequence ::=
+    source_file_name |
+    source_file_name "," source_file_name_sequence
+
+source_file_name_list ::=
+    "[" source_file_name_sequence "]"
+
+//Directives
+//Source file directives
+
+source_file_directives ::=
+    source_file_directive |
+    source_file_directive source_file_directives
+
+source_file_directive ::=
+    ":- encoding(" atom ")." |
+    ":- set_logtalk_flag(" atom "," nonvar ")." |
+    ":- include(" source_file_name ")."
+    Prolog directives
+
+//Conditional compilation directives
+
+conditional_compilation_directives ::=
+    conditional_compilation_directive |
+    conditional_compilation_directive conditional_compilation_directives
+
+conditional_compilation_directive ::=
+    ":- if(" callable ")." |
+    ":- elif(" callable ")." |
+    ":- else." |
+    ":- endif."
+
+Object directives
+
+object_directives ::=
+    object_directive |
+    object_directive object_directives
+
+object_directive ::=
+    ":- initialization(" callable ")." |
+    ":- built_in." |
+    ":- threaded." |
+    ":- dynamic." |
+    ":- uses(" object_identifier ")." |
+    ":- use_module(" module_identifier "," module_predicate_indicator_alias_list ")." |
+    ":- calls(" protocol_identifiers ")." |
+    ":- info(" entity_info_list ")." |
+    ":- set_logtalk_flag(" atom "," nonvar ")." |
+    ":- include(" source_file_name ")." |
+    predicate_directives
+
+///Category directives
+
+category_directives ::=
+    category_directive |
+    category_directive category_directives
+
+category_directive ::=
+    ":- built_in." |
+    ":- dynamic." |
+    ":- uses(" object_identifier ")." |
+    ":- use_module(" module_identifier "," predicate_indicator_alias_list ")." |
+    ":- calls(" protocol_identifiers ")." |
+    ":- info(" entity_info_list ")." |
+    ":- set_logtalk_flag(" atom "," nonvar ")." |
+    ":- include(" source_file_name ")." |
+    predicate_directives
+
+//Protocol directives
+
+protocol_directives ::=
+    protocol_directive |
+    protocol_directive protocol_directives
+
+protocol_directive ::=
+    ":- built_in." |
+    ":- dynamic." |
+    ":- info(" entity_info_list ")." |
+    ":- set_logtalk_flag(" atom "," nonvar ")." |
+    ":- include(" source_file_name ")." |
+    predicate_directives
+
+//Predicate directives
+
+predicate_directives ::=
+    predicate_directive |
+    predicate_directive predicate_directives
+
+predicate_directive ::=
+    alias_directive |
+    synchronized_directive |
+    uses_directive |
+    scope_directive |
+    mode_directive |
+    meta_predicate_directive |
+    meta_non_terminal_directive |
+    info_directive |
+    dynamic_directive |
+    discontiguous_directive |
+    multifile_directive |
+    coinductive_directive |
+    operator_directive
+
+alias_directive ::=
+    ":- alias(" entity_identifier "," predicate_indicator_alias_list ")." |
+    ":- alias(" entity_identifier "," non_terminal_indicator_alias_list ")."
+
+synchronized_directive ::=
+    ":- synchronized(" predicate_indicator_term | non_terminal_indicator_term ")."
+
+uses_directive ::=
+    ":- uses(" object_identifier "," predicate_indicator_alias_list ")."
+
+scope_directive ::=
+    ":- public(" predicate_indicator_term | non_terminal_indicator_term ")." |
+    ":- protected(" predicate_indicator_term | non_terminal_indicator_term ")." |
+    ":- private(" predicate_indicator_term | non_terminal_indicator_term ")."
+
+mode_directive ::=
+    ":- mode(" predicate_mode_term | non_terminal_mode_term "," number_of_proofs ")."
+
+meta_predicate_directive ::=
+    ":- meta_predicate(" meta_predicate_template_term ")."
+
+meta_non_terminal_directive ::=
+    ":- meta_non_terminal(" meta_non_terminal_template_term ")."
+
+info_directive ::=
+    ":- info(" predicate_indicator | non_terminal_indicator "," predicate_info_list ")."
+
+dynamic_directive ::=
+    ":- dynamic(" predicate_indicator_term | non_terminal_indicator_term ")."
+
+discontiguous_directive ::=
+    ":- discontiguous(" predicate_indicator_term | non_terminal_indicator_term ")."
+
+multifile_directive ::=
+    ":- multifile(" predicate_indicator_term ")."
+
+coinductive_directive ::=
+    ":- coinductive(" predicate_indicator_term | coinductive_predicate_template_term ")."
+
+predicate_indicator_term ::=
+    predicate_indicator |
+    predicate_indicator_sequence |
+    predicate_indicator_list
+
+predicate_indicator_sequence ::=
+    predicate_indicator |
+    predicate_indicator "," predicate_indicator_sequence
+
+predicate_indicator_list ::=
+    "[" predicate_indicator_sequence "]"
+
+predicate_indicator_alias ::=
+    predicate_indicator |
+    predicate_indicator "as" predicate_indicator |
+    predicate_indicator "::" predicate_indicator |
+    predicate_indicator ":" predicate_indicator
+
+predicate_indicator_alias_sequence ::=
+    predicate_indicator_alias |
+    predicate_indicator_alias "," predicate_indicator_alias_sequence
+
+predicate_indicator_alias_list ::=
+    "[" predicate_indicator_alias_sequence "]"
+
+module_predicate_indicator_alias ::=
+    predicate_indicator |
+    predicate_indicator "as" predicate_indicator |
+    predicate_indicator ":" predicate_indicator
+
+module_predicate_indicator_alias_sequence ::=
+    module_predicate_indicator_alias |
+    module_predicate_indicator_alias "," module_predicate_indicator_alias_sequence
+
+module_predicate_indicator_alias_list ::=
+    "[" module_predicate_indicator_alias_sequence "]"
+
+non_terminal_indicator_term ::=
+    non_terminal_indicator |
+    non_terminal_indicator_sequence |
+    non_terminal_indicator_list
+
+non_terminal_indicator_sequence ::=
+    non_terminal_indicator |
+    non_terminal_indicator "," non_terminal_indicator_sequence
+
+non_terminal_indicator_list ::=
+    "[" non_terminal_indicator_sequence "]"
+
+non_terminal_indicator ::=
+    functor "//" arity
+
+non_terminal_indicator_alias ::=
+    non_terminal_indicator |
+    non_terminal_indicator "as" non_terminal_indicator
+    non_terminal_indicator "::" non_terminal_indicator
+
+non_terminal_indicator_alias_sequence ::=
+    non_terminal_indicator_alias |
+    non_terminal_indicator_alias "," non_terminal_indicator_alias_sequence
+
+non_terminal_indicator_alias_list ::=
+    "[" non_terminal_indicator_alias_sequence "]"
+
+coinductive_predicate_template_term ::=
+    coinductive_predicate_template |
+    coinductive_predicate_template_sequence |
+    coinductive_predicate_template_list
+
+coinductive_predicate_template_sequence ::=
+    coinductive_predicate_template |
+    coinductive_predicate_template "," coinductive_predicate_template_sequence
+
+coinductive_predicate_template_list ::=
+    "[" coinductive_predicate_template_sequence "]"
+
+coinductive_predicate_template ::=
+    atom "(" coinductive_mode_terms ")"
+
+coinductive_mode_terms ::=
+    coinductive_mode_term |
+    coinductive_mode_terms "," coinductive_mode_terms
+
+coinductive_mode_term ::=
+    "+" | "-"
+
+predicate_mode_term ::=
+    atom "(" mode_terms ")"
+
+non_terminal_mode_term ::=
+    atom "(" mode_terms ")"
+
+mode_terms ::=
+    mode_term |
+    mode_term "," mode_terms
+
+mode_term ::=
+    "@" [ type ] | "+" [ type ] | "-" [ type ] | "?" [ type ] |
+    "++" [ type ] | "--" [ type ]
+
+type ::=
+    prolog_type | logtalk_type | user_defined_type
+
+prolog_type ::=
+    "term" | "nonvar" | "var" |
+    "compound" | "ground" | "callable" | "list" |
+    "atomic" | "atom" |
+    "char"| "number" | "integer" | "float"
+
+logtalk_type ::=
+    "object" | "category" | "protocol" |
+    "event"
+
+user_defined_type ::=
+    atom |
+    compound
+
+number_of_proofs ::=
+    "zero" | "zero_or_one" | "zero_or_more" | "one" | "one_or_more" | "one_or_error" | "error"
+
+meta_predicate_template_term ::=
+    meta_predicate_template |
+    meta_predicate_template_sequence |
+    meta_predicate_template_list
+
+meta_predicate_template_sequence ::=
+    meta_predicate_template |
+    meta_predicate_template "," meta_predicate_template_sequence
+
+meta_predicate_template_list ::=
+    "[" meta_predicate_template_sequence "]"
+
+meta_predicate_template ::=
+    object_identifier "::" atom "(" meta_predicate_specifiers ")" |
+    category_identifier "::" atom "(" meta_predicate_specifiers ")" |
+    atom "(" meta_predicate_specifiers ")"
+
+meta_predicate_specifiers ::=
+    meta_predicate_specifier |
+    meta_predicate_specifier "," meta_predicate_specifiers
+
+meta_predicate_specifier ::=
+    non-negative integer | "::" | "^" |
+    "*"
+
+meta_non_terminal_template_term ::=
+    meta_predicate_template_term
+
+entity_info_list ::=
+    "[]" |
+    "[" entity_info_item "is" nonvar "|" entity_info_list "]"
+
+entity_info_item ::=
+    "comment" | "remarks" |
+    "author" | "version" | "date" |
+    "copyright" | "license" |
+    "parameters" | "parnames" |
+    "see_also" |
+    atom
+
+predicate_info_list ::=
+    "[]" |
+    "[" predicate_info_item "is" nonvar "|" predicate_info_list "]"
+
+predicate_info_item ::=
+    "comment" | "remarks" |
+    "arguments" | "argnames" |
+    "redefinition" | "allocation" |
+    "examples" | "exceptions" |
+    atom
+
+//Clauses and goals
+
+clause ::=
+    object_identifier "::" head ":-" body |
+    module_identifier ":" head ":-" body |
+    head э body |
+    fact
+
+goal ::=
+    message_sending |
+    super_call |
+    external_call |
+    context_switching_call |
+    callable
+
+message_sending ::=
+    message_to_object |
+    message_delegation |
+    message_to_self
+
+message_to_object ::=
+    receiver "::" messages
+
+message_delegation ::=
+    "[" message_to_object "]"
+
+message_to_self ::=
+    "::" messages
+
+super_call ::=
+    "^^" message
+
+messages ::=
+    message |
+    "(" message "," messages ")" |
+    "(" message ";" messages ")" |
+    "(" message "->" messages ")"
+
+message ::=
+    callable |
+    variable
+
+receiver ::=
+    "{" callable "}" |
+    object_identifier |
+    variable
+
+external_call ::=
+    "{" callable "}"
+
+context_switching_call ::=
+    object_identifier "<<" goal
+
+//Lambda expressions
+
+lambda_expression ::=
+    lambda_free_variables "/" lambda_parameters ">>" callable |
+    lambda_free_variables "/" callable |
+    lambda_parameters ">>" callable
+
+lambda_free_variables ::=
+    "{" conjunction of variables "}" |
+    "{" variable "}" |
+    "{}"
+
+lambda_parameters ::=
+    list of terms |
+    "[]"
+
+//Entity properties
+
+category_property ::=
+    "static" |
+    "dynamic" |
+    "built_in" |
+    "file(" atom ")" |
+    "file(" atom "," atom ")" |
+    "lines(" integer "," integer ")" |
+    "events" |
+    "source_data" |
+    "public(" predicate_indicator_list ")" |
+    "protected(" predicate_indicator_list ")" |
+    "private(" predicate_indicator_list ")" |
+    "declares(" predicate_indicator "," predicate_declaration_property_list ")" |
+    "defines(" predicate_indicator "," predicate_definition_property_list ")" |
+    "includes(" predicate_indicator "," object_identifier | category_identifier "," predicate_definition_property_list ")" |
+    "provides(" predicate_indicator "," object_identifier | category_identifier "," predicate_definition_property_list ")" |
+    "alias(" predicate_indicator "," predicate_alias_property_list ")" |
+    "calls(" predicate "," predicate_call_update_property_list ")" |
+    "updates(" predicate "," predicate_call_update_property_list ")" |
+    "number_of_clauses(" integer ")" |
+    "number_of_rules(" integer ")" |
+    "number_of_user_clauses(" integer ")"
+    "number_of_user_rules(" integer ")"
+
+object_property ::=
+    "static" |
+    "dynamic" |
+    "built_in" |
+    "threaded" |
+    "file(" atom ")" |
+    "file(" atom "," atom ")" |
+    "lines(" integer "," integer ")" |
+    "context_switching_calls" |
+    "dynamic_declarations" |
+    "events" |
+    "source_data" |
+    "complements(" "allow" | "restrict" ")" |
+    "complements" |
+    "public(" predicate_indicator_list ")" |
+    "protected(" predicate_indicator_list ")" |
+    "private(" predicate_indicator_list ")" |
+    "declares(" predicate_indicator "," predicate_declaration_property_list ")" |
+    "defines(" predicate_indicator "," predicate_definition_property_list ")" |
+    "includes(" predicate_indicator "," object_identifier | category_identifier "," predicate_definition_property_list ")" |
+    "provides(" predicate_indicator "," object_identifier | category_identifier "," predicate_definition_property_list ")"
+    "alias(" predicate_indicator "," predicate_alias_property_list ")" |
+    "calls(" predicate "," predicate_call_update_property_list ")" |
+    "updates(" predicate "," predicate_call_update_property_list ")" |
+    "number_of_clauses(" integer ")" |
+    "number_of_rules(" integer ")" |
+    "number_of_user_clauses(" integer ")"
+    "number_of_user_rules(" integer ")"
+
+protocol_property ::=
+    "static" |
+    "dynamic" |
+    "built_in" |
+    "source_data" |
+    "file(" atom ")" |
+    "file(" atom "," atom ")" |
+    "lines(" integer "," integer ")" |
+    "public(" predicate_indicator_list ")" |
+    "protected(" predicate_indicator_list ")" |
+    "private(" predicate_indicator_list ")" |
+    "declares(" predicate_indicator "," predicate_declaration_property_list ")" |
+    "alias(" predicate_indicator "," predicate_alias_property_list ")"
+
+predicate_declaration_property_list ::=
+    "[" predicate_declaration_property_sequence "]"
+
+predicate_declaration_property_sequence ::=
+    predicate_declaration_property |
+    predicate_declaration_property "," predicate_declaration_property_sequence
+
+predicate_declaration_property ::=
+    "static" | "dynamic" |
+    "scope(" scope ")" |
+    "private" | "protected" | "public" |
+    "coinductive" |
+    "multifile" |
+    "synchronized" |
+    "meta_predicate(" meta_predicate_template ")" |
+    "coinductive(" coinductive_predicate_template ")" |
+    "non_terminal(" non_terminal_indicator ")" |
+    "include(" atom ")" |
+    "line_count(" integer ")" |
+    "mode(" predicate_mode_term | non_terminal_mode_term "," number_of_proofs ")" |
+    "info(" list ")"
+
+predicate_definition_property_list ::=
+    "[" predicate_definition_property_sequence "]"
+
+predicate_definition_property_sequence ::=
+    predicate_definition_property |
+    predicate_definition_property "," predicate_definition_property_sequence
+
+predicate_definition_property ::=
+    "inline" | "auxiliary" |
+    "non_terminal(" non_terminal_indicator ")" |
+    "include(" atom ")" |
+    "line_count(" integer ")" |
+    "number_of_clauses(" integer ")" |
+    "number_of_rules(" integer ")"
+//fixme unreachable
+predicate_alias_property_list ::=
+    "[" predicate_alias_property_sequence "]"
+
+//fixme unreachable
+predicate_alias_property_sequence ::=
+    predicate_alias_property |
+    predicate_alias_property "," predicate_alias_property_sequence
+
+//fixme unreachable
+predicate_alias_property ::=
+    "for(" predicate_indicator ")" |
+    "from(" entity_identifier ")" |
+    "non_terminal(" non_terminal_indicator ")" |
+    "include(" atom ")" |
+    "line_count(" integer ")"
+
+predicate ::=
+    predicate_indicator |
+    "^^" predicate_indicator |
+    "::" predicate_indicator |
+    variable "::" predicate_indicator |
+    object_identifier "::" predicate_indicator |
+    variable ":" predicate_indicator |
+    module_identifier ":" predicate_indicator
+
+predicate_call_update_property_list ::=
+    "[" predicate_call_update_property_sequence "]"
+
+predicate_call_update_property_sequence ::=
+    predicate_call_update_property |
+    predicate_call_update_property "," predicate_call_update_property_sequence
+
+predicate_call_update_property ::=
+    "caller(" predicate_indicator ")" |
+    "include(" atom ")" |
+    "line_count(" integer ")" |
+    "as(" predicate_indicator ")"
+
+//Predicate properties
+
+predicate_property ::=
+    "static" | "dynamic" |
+    "scope(" scope ")" |
+    "private" | "protected" | "public" |
+    "swi-prolog" | "prolog" | "foreign" |
+    "coinductive(" coinductive_predicate_template ")" |
+    "multifile" |
+    "synchronized" |
+    "built_in" |
+    "inline" |
+    "declared_in(" entity_identifier ")" |
+    "meta_predicate(" meta_predicate_template ")" |
+    "alias_of(" callable ")" |
+    "alias_declared_in(" entity_identifier ")" |
+    "non_terminal(" non_terminal_indicator ")" |
+    "mode(" predicate_mode_term | non_terminal_mode_term "," number_of_proofs ")" |
+    "info(" list ")" |
+    "number_of_clauses(" integer ")" |
+    "number_of_rules(" integer ")" |
+    "declared_in(" entity_identifier "," integer ")" |
+    "defined_in(" object_identifier | category_identifier "," integer")" |
+    "redefined_from(" object_identifier | category_identifier "," integer")" |
+    "alias_declared_in(" entity_identifier "," integer")"
+
+//Compiler flags
+
+compiler_flag ::=
+    flag(flag_value)
+
+flag_value ::= atom | number | string
+
+//=====================================================================================
+
+
+logtalkFile ::= item_*
+
+private item_ ::= (sentence | comment | crlf)
+
+sentence ::= (operation | compound |atom) dot
+
+comment ::= block_comment | line_Comment | DocComment
+
+whitespace ::= 32 | eol | 26 //etc.
+
+private line_Comment ::= "%" char* crlf
+
+
+
+term ::= (operation|basic_term) //basic_term instead of term to avoid left recursion
+
+basic_term ::= (parenthesized_block|braced_block|list|map_reference|compound|atom|string|number|variable)
+
+operation ::= (native_binary_operation|native_left_operation|
+                custom_binary_operation|custom_left_operation)
+
+native_binary_operation ::= basic_term known_binary_operator term
+
+native_left_operation ::= known_left_operator term
+
+custom_binary_operation ::= basic_term atom term
+
+custom_left_operation ::= atom term
+
+string ::= "\"" char* "\""
+
+char::= '\'char_code'\'
+
+crlf ::= "\r\n" | "\n" | "\r"
+
+atom ::= (  quoted_atom|
+            unquoted_atom|
+            keyword_atom|
+            directive_unquoted_atom|
+            directive_keyword_atom|
+            head_unquoted_atom|
+            head_keyword_atom|
+            cut|
+            cons|
+            known_operator
+         )
+
+cut ::= "!"
+cons ::= "[ _ | _ ]" | "[|_]" | "(|_)"
+
+compound ::= compound_name lparen ( term_sequence | "|" term_list | variable ) rparen
+
+term_list  ::= [ term_sequence ]
+
+compound_name ::= atom | variable | compound
+
+atomic ::= directive_unquoted_compound_name|
+           directive_keyword_compound_name|
+           head_keyword_compound_name|
+           head_unquoted_compound_name
+
+list ::= lbracket term_sequence rbracket
+
+term_sequence ::= "" | term "," term_sequence
+
+lbracket ::= "["
+
+rbracket ::= "]"
+
+braced_block ::= lbrace term rbrace
+
+lbrace ::= "{"
+
+rbrace ::= "}"
+
+
+
+
+parenthesized_block ::= lparen term rparen
+
+number ::= integer | float | bin_number | oct_number | hex_number | char_code
+
+integer ::=
+
+float ::=
+
+bin_number ::= 0 bin_number | 1 bin_number  //
+
+oct_number ::= octal_digit octal_number//literal
+
+hex_number ::= hex_digit hex_number
+
+char_code ::=  0 65535
+
+
+
+variable ::= anonymous_variable | named_variable | skolem_const
+
+map_reference ::= ( braced_block | variable ) map_op ( atom | integer | variable )
+
+known_operator ::= (known_binary_operator | known_left_operator )
+
+known_binary_operator ::= ( long_arrow_op|
+                            directive_op|
+                            semicolon_op|pipe_op|
+                            implication_op|star_implication_op|
+                            comma|
+                            colon_equals_op|
+                            less_than_op|equals_op|equals_dot_dot_op|equals_at_equals_op|backslash_equals_at_equals_op|
+                            equals_colon_equals_op|less_or_equals_op|double_equals_op|equals_backslash_equals_op|
+                            greater_than_op|greater_or_equals_op|at_less_than_op|at_equals_less_than_op|
+                            at_greater_than_op|at_greater_or_equals_op|backslash_equals_op|backslash_double_equals_op|
+                            as_op|is_op|butterfly_op|colon_less_than_op|
+                            colon_op|
+                            plus_op|minus_op|slash_backslash_op|backslash_slash_op|xor_op|
+                            star_op|slash_op|double_slash_op|div_op|rdiv_op|double_greater_than_op|mod_op|rem_op|
+                            double_star_op|
+                            caret_op|
+                            map_op|
+                            dollar_op|
+                            lgt_method_call_op|
+                            lgt_super_call_op|
+                            lgt_context_switching_op
+                            )
+
+known_left_operator ::=   ( directive_op|
+                //            query_op|
+                            dynamic_op|discontiguous_op|initialization_op|meta_predicate_op|module_transparent_op|multifile_op|
+                            public_op|thread_local_ash_op|
+                                                                               at|
+                                                                               lgt_method_call_op|
+                                                                               lgt_super_call_op
+                                                                               )
+
+
+                                                   predicate_indicator ::= atom "/" integer | atom  "//" interer | variable "/" integer
+
+                                                   //================ terminals
+op|thread_initialization_op|volatile_op|
+                            not_op|
+                            question_mark_op|
+                            plus_op|minus_op|backsl
+directive_op ::= ":-"
+dynamic_op ::= "dynamic"
+discontiguous_op
+initialization_op
+meta_predicate_op
+module_transparent_op
+multifile_op
+public_op
+thread_local_op
+thread_initialization_op
+volatile_op
+not_op
+question_mark_op
+plus_op
+minus_op
+backslash_op
+at
+lgt_method_call_op
+lgt_super_call_op
+
+
+//except

@@ -1,5 +1,5 @@
 # PscC
-Perfect Super(vised) Compiler collection is the container of the source-to-source optimizers. 
+**_`Perfect super(vised) compiler Collection`_** is the container of the `source-to-source` optimizers. 
 The super-compiler source language is the same as the target's one. This condition is hold for the some reasons (self-application, etc.).
 
 The algorithms are used by this supercompiler follow the classical super-compilation algorithms (V. Turchin et al.) as much as possible.

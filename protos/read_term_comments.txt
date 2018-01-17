@@ -1,0 +1,109 @@
+%The reading is controlled by options from the list of Options.
+%If this list is empty, the behaviourmize is the same as for read/1.
+%The options are upward compatible with Quintus Prolog. The argument order is according to the ISO standard.
+%Syntax errors are always reported using exception-handling (see catch/3). Options:
+%
+%backquoted_string(Bool)
+%    If true, read `...` to a string object (see section 5.2). The default depends on the Prolog flag back_quotes.
+%character_escapes(Bool)
+%    Defines how to read \ escape sequences in quoted atoms.
+%    See the Prolog flag character_escapes in current_prolog_flag/2. (SWI-Prolog).
+%comments(-Comments)
+%    Unify Comments with a list of Position-Comment,
+%    where Position is a stream position object (see stream_position_data/3) indicating the start of a comment and
+%    Comment is a string object containing the text including delimiters of a comment.
+%    It returns all comments from where the read_term/2 call started up to the end of the term read.
+%cycles(Bool)
+%    If true (default false), re-instantiate templates as produced by the corresponding write_term/2 option.
+%    Note that the default is false to avoid misinterpretation of @(Template, Substutions),
+%    while the default of write_term/2 is true because emitting cyclic terms without using the template construct produces
+%    an infinitely large term (read: it will generate an error after producing a huge amount of output).
+%dotlists(Bool)
+%    If true (default false), read .(a,[]) as a list, even if lists are internally nor constructed using the dot as functor.
+%This is primarily intended to read the output from write_canonical/1 from other Prolog systems. See section 5.1.
+%double_quotes(Atom)
+%    Defines how to read " ... " strings. See the Prolog flag double_quotes. (SWI-Prolog).
+%module(Module)
+%    Specify Module for operators, character_escapes flag and double_quotes flag.
+%    The value of the latter two is overruled if the corresponding read_term/3 option is provided.
+%    If no module is specified, the current `source module' is used. (SWI-Prolog).
+%quasi_quotations(-List)
+%    If present, unify List with the quasi quotations (see section A.27) instead of evaluating quasi quotations.
+%    Each quasi quotation is a term quasi_quotation(+Syntax, +Quotation, +VarDict, -Result),
+%    where Syntax is the term in {|Syntax||..|},
+%    Quotation is a list of character codes that represent the quotation, VarDict is a list of Name=Variable and Result is a variable that shares with the place where the quotation must be inserted. This option is intended to support tools that manipulate Prolog source text.
+%singletons(Vars)
+%    As variable_names, but only reports the variables occurring only once in the Term read. Variables starting with an underscore (`_') are not included in this list. (ISO). If Vars is the constant warning, singleton variables are reported using print_message/2. The variables appear in the order they have been read.
+%syntax_errors(Atom)
+%    If error (default), throw an exception on a syntax error. Other values are fail, which causes a message to be printed using print_message/2, after which the predicate fails, quiet which causes the predicate to fail silently, and dec10 which causes syntax errors to be printed, after which read_term/[2,3] continues reading the next term. Using dec10, read_term/[2,3] never fails. (Quintus, SICStus).
+%subterm_positions(TermPos)
+%    Describes the detailed layout of the term. The formats for the various types of terms are given b
+%elow. All positions are character positions. If the input is related to a normal stream, these positions are relative to the start of the input; when reading from the terminal, they are relative to the start of the term.
+%
+%    From-To
+%        Used for primitive types (atoms, numbers, variables).
+%    string_position(From, To)
+%        Used to indicate the position of a string enclosed in double quotes (").
+%    brace_term_position(From, To, Arg)
+%        Term of the form {...}, as used in DCG rules. Arg describes the argument.
+%    list_position(From, To, Elms, Tail)
+%        A list. Elms describes the positions of the elements. If the list specifies the tail as |<TailTerm> , Tail is unified with the term position of the tail, otherwise with the atom none.
+%    term_position(From, To, FFrom, FTo, SubPos)
+%        Used for a compound term not matching one of the above. FFrom and FTo describe the position of the functor. SubPos is a list, each element of which describes the term position of the corresponding subterm.
+%    dict_position(From, To, TagFrom, TagTo, KeyValuePosList)
+%        Used for a dict (see section 5.4). The position of the key-value pairs is described by KeyValuePosList, which is a list of key_value_position/7 terms. The key_value_position/7 terms appear in the order of the input. Because maps to not preserve ordering, the key is provided in the position description.
+%    key_value_position(From, To, SepFrom, SepTo, Key, KeyPos, ValuePos)
+%        Used for key-value pairs in a map (see section 5.4). It is similar to the term_position/5 that would be created, except that the key and value positions do not need an intermediate list and the key is provided in Key to enable synchronisation of the file position data with the data structure.
+%    parentheses_term_position(From, To, ContentPos)
+%        Used for terms between parentheses. This is an extension compared to the original Quintus specification that was considered necessary for secure refactoring of terms.
+%    quasi_quotation_position(From, To, SyntaxFrom, SyntaxTo, ContentPos)
+%        Used for quasi quotations.
+%
+%term_position(Pos)
+%    Unifies Pos with the starting position of the term read. Pos is of the same format as used by stream_property/2.
+%var_prefix(Bool)
+%    If true, demand variables to start with an underscore. See section 2.16.1.7.
+%variables(Vars)
+%    Unify Vars with a list of variables in the term. The variables appear in the order they have been read. See also term_variables/2. (ISO).
+%variable_names(Vars)
+%    Unify Vars with a list of `Name = Var', where Name is an atom describing the variable name and Var is a variable that shares with the corresponding variable in Term. (ISO). The variables appear in the order they have been read.
+%
+%GNU-Prolog
+%==========
+%
+%Read options: Options is a list of read options. If this list contains contradictory options, the rightmost option is the one which applies. Possible options are:
+%
+%    variables(VL): VL is unified with the list of all variables of the input term, in left-to-right traversal order. Anonymous variables are included in the list VL.
+%    variable_names(VNL): VNL is unified with the list of pairs Name = Var where Var is a named variable of the term and Name is the atom associated with the name of Var. Anonymous variables are not included in the list VNL.
+%    singletons(SL): SL is unified with the list of pairs Name = Var where Var is a named variable which occurs only once in the term and Name is the atom associated to the name of Var. Anonymous variables are not included in the list SL.
+%    syntax_error(error/warning/fail): specifies the effect of a syntax error:
+%        error: a syntax_error is raised.
+%        warning: a warning message is displayed and the predicate fails.
+%        fail: the predicate quietly fails.
+%
+%    The default value is the value of the syntax_error Prolog flag (section 8.22.1).
+%    end_of_term(dot/eof): specifies the end-of-term delimiter: dot is the classical full-stop delimiter (a dot followed with a layout character), eof is the end-of-file delimiter. This option is useful for predicates like read_term_from_atom/3 (section 8.15.1) to avoid to add a terminal dot at the end of the atom. The default value is dot.
+%
+%read(SorA, Term) is equivalent to read_term(SorA, Term, []).
+%
+%read_term/2 and read/1 apply to the current input stream.
+%
+%Errors
+%SorA is a variable	  	instantiation_error
+%Options is a partial list or a list with an element E which is a variable	  	instantiation_error
+%SorA is neither a variable nor a stream-term or alias	  	domain_error(stream_or_alias, SorA)
+%Options is neither a partial list nor a list	  	type_error(list, Options)
+%an element E of the Options list is neither a variable nor a valid read option	  	domain_error(read_option, E)
+%SorA is not associated with an open stream	  	existence_error(stream, SorA)
+%SorA is an output stream	  	permission_error(input, stream, SorA)
+%SorA is associated with a binary stream	  	permission_error(input, binary_stream, SorA)
+%SorA has stream properties end_of_stream(past) and eof_action(error). permission_error(input, past_end_of_stream, SorA)
+%a syntax error occurs and the value of the syntax_error Prolog flag is error (section 8.22.1)
+%syntax_error(atom explaining the error)
+%[
+%Portability
+%
+%ISO predicates. The ISO reference raises a representation_error(Flag) where Flag is max_arity, max_integer,
+%or min_integer when the read term breaches an implementation defined limit specified by Flag.
+%GNU Prolog detects neither min_integer nor max_integer violation and treats a max_arity violation as a syntax error.
+%The read options syntax_error and end_of_term are GNU Prolog extensions.
